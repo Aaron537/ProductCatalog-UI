@@ -18,6 +18,7 @@ export default function ProductCatalog() {
   });
   const [errors, setErrors] = useState({});
 
+  // Initial catalog fetch
   useEffect(() => {
     fetch('http://localhost:8080/catalog/products')
       .then((res) => res.json())
@@ -29,19 +30,21 @@ export default function ProductCatalog() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Basic form validation
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.product_name) newErrors.product_name = 'Required';
-    if (!formData.brand) newErrors.brand = 'Required';
-    if (!formData.price || isNaN(formData.price)) newErrors.price = 'Must be a number';
-    if (!formData.model) newErrors.model = 'Required';
-    if (!formData.product_description) newErrors.product_description = 'Required';
-    if (!formData.product_key) newErrors.product_key = 'Required';
-    if (!formData.retailer) newErrors.retailer = 'Required';
+    if (!formData.product_name) newErrors.product_name = 'Product Name is required';
+    if (!formData.brand) newErrors.brand = 'Brand is required';
+    if (!formData.price || isNaN(formData.price)) newErrors.price = 'Price must be a number';
+    if (!formData.model) newErrors.model = 'Model is required';
+    if (!formData.product_description) newErrors.product_description = 'Product description is required';
+    if (!formData.product_key || isNaN(formData.product_key)) newErrors.product_key = 'Product Key must be a number';
+    if (!formData.retailer) newErrors.retailer = 'Retailer is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle new product, call validation and then submit to the /products endpoint
   const handleAddProduct = async () => {
     if (!validateForm()) return;
     const newProduct = {
@@ -76,6 +79,7 @@ export default function ProductCatalog() {
     }
   };
 
+  // On click, the product card will be expanded to show additional details
   const toggleProductDetails = (key) => {
     setExpandedProductKey((prevKey) => (prevKey === key ? null : key));
   };
